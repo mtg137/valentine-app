@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 
+/// @title ValentineDay smart contract
+/// @author Marjorie Ngoupende
+/// @notice This code was inspired by HashLips
+
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
