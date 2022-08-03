@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import ValentineDay from "./artifacts/ValentineDay.json";
+import ValentineDay from "./abi/ValentineDay.json";
 import "./App.css";
+
 //My generated images
 import img1 from "./img/1.png";
 import img2 from "./img/2.png";
@@ -21,10 +22,10 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 
 //Address where the contract was deployed
-const VDaddress = "0xF2b9d1E3EFBb85720ed26B5a36B4D35462f12F01";
+const VDaddress = "0xd3e4470C45c4b4f486F2cd20a84f92965a619e91";
 
 function App() {
-  const [error, setError] = useState("");
+  const [error, setError, setErrorColor] = useState("");
   //Retrieves all information about NFTS
   const [data, setData] = useState({});
   const [account, setAccount] = useState([]);
@@ -62,9 +63,12 @@ function App() {
         const totalSupply = await contract.totalSupply();
         const object = { cost: String(cost), totalSupply: String(totalSupply) };
         //We assign the created object to the SetData
+
+        console.log('object', object)
         setData(object);
       } catch (err) {
-        setError(err.message);
+        console.log('error', err)
+        setError("🚨 Connect your Wallet with Ropsten network!🚨");
       }
     }
   }
@@ -86,6 +90,8 @@ function App() {
           from: accounts[0],
           value: data.cost,
         };
+
+        console.log('overrides', overrides)
         const transaction = await contract.mint(accounts[0], 1, overrides);
         await transaction.wait();
         //Update information after transaction
@@ -173,59 +179,27 @@ function App() {
         </div>
         <div className="buyNft">
           <h1>Mint a Valentine Day's PopCorn ! 🍿</h1>
-          {error && <p>{error}</p>}
+          <p className="textColor">
+            To use the DApp, you must connect with your Metamask on the Ropsten
+            network
+          </p>
+
           <p className="count">{data.totalSupply} / 50</p>
           <p className="cost">
-            Each PopCorn NFT costs {data.cost / 10 ** 18} eth (excluding gas
+            💲Each PopCorn NFT costs {data.cost / 10 ** 18} eth (excluding gas
             fees)
           </p>
           <button type="button" className="btn btn-danger" onClick={mint}>
             BUY
           </button>
-          {account[0] === "0x957e3b7c98ca23dbc89b7358f90ac1a8d5b2655e" && (
+          {account[0] === "0xd39126d40416c72adc67596ea8e9d1171bcecfdd" && (
             <button type="button" className="btn btn-dark" onClick={withdraw}>
               Withdraw
             </button>
           )}
         </div>
-        <div className="row kpx_row-sm-offset-3 kpx_socialButtons">
-          <div className="col-xs-2 col-sm-2">
-            <a
-              href="#"
-              className="btn btn-lg btn-block kpx_btn-facebook"
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Facebook"
-            >
-              <i className="fa fa-facebook fa-2x"></i>
-              <span className="hidden-xs"></span>
-            </a>
-          </div>
-          <div className="col-xs-2 col-sm-2">
-            <a
-              href="#"
-              className="btn btn-lg btn-block kpx_btn-twitter"
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Twitter"
-            >
-              <i className="fa fa-twitter fa-2x"></i>
-              <span className="hidden-xs"></span>
-            </a>
-          </div>
-          <div className="col-xs-2 col-sm-2">
-            <a
-              href="#"
-              className="btn btn-lg btn-block kpx_btn-google-plus"
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Google Plus"
-            >
-              <i className="fa fa-google-plus fa-2x"></i>
-              <span className="hidden-xs"></span>
-            </a>
-          </div>
-        </div>
+        <br></br>
+        {error && <p>{error}</p>}
         <Footer />
       </div>
     </div>
